@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 class Student {
     int id;
@@ -20,29 +20,49 @@ class Student {
     @Override
     public String toString() {
         return "Student{" +
-                "id:" + id +
-                ", name:'" + name + '\'' +
-                ", surname:'" + surname + '\'' +
-                ", age:" + age +
-                ", course:" + course +
-                ", averageMark:" + averageMark +
+                "id: " + id +
+                ", name: " + name + '\'' +
+                ", surname: " + surname + '\'' +
+                ", age: " + age +
+                ", course: " + course +
+                ", averageMark: " + averageMark +
                 '}';
     }
 }
 
 class StudentDatabase {
-    private ArrayList<Student> students;
+    private LinkedList<Student> students;
 
     public StudentDatabase() {
-        students = new ArrayList<>();
+        students = new LinkedList<>();
     }
 
     public void addStudent(Student student) {
         students.add(student);
     }
 
+    public void addStudentAtFirst(Student student) {
+        students.addFirst(student);
+    }
+
     public void removeStudentById(int id) {
         students.removeIf(student -> student.id == id);
+    }
+
+    public void removeFirstStudent() {
+        if (!students.isEmpty()) {
+            students.removeFirst();
+        } else {
+            System.out.println("Список порожній.");
+        }
+    }
+
+    public void removeLastStudent() {
+        if (!students.isEmpty()) {
+            students.removeLast();
+        } else {
+            System.out.println("Список порожній.");
+        }
     }
 
     public Student findStudentById(int id) {
@@ -67,9 +87,17 @@ public class Main {
 
         db.addStudent(new Student(1, "John", "Doe", 20, 3, 85.5));
         db.addStudent(new Student(2, "Jane", "Smith", 21, 4, 90.0));
-        db.addStudent(new Student(3, "Tom", "Brown", 19, 2, 78.3));
+        db.addStudentAtFirst(new Student(3, "Tom", "Brown", 19, 2, 78.3)); // додаємо на початок списку
 
         System.out.println("Список всіх студентів:");
+        db.printAllStudents();
+
+        System.out.println("\nВидалення першого студента:");
+        db.removeFirstStudent();
+        db.printAllStudents();
+
+        System.out.println("\nВидалення останнього студента:");
+        db.removeLastStudent();
         db.printAllStudents();
 
         System.out.println("\nПошук студента з id 1:");
@@ -79,11 +107,5 @@ public class Main {
         } else {
             System.out.println("Студента не знайдено.");
         }
-
-        System.out.println("\nВидалення студента з id 2:");
-        db.removeStudentById(2);
-
-        System.out.println("Список всіх студентів після видалення:");
-        db.printAllStudents();
     }
 }
