@@ -1,15 +1,13 @@
-import java.util.LinkedList;
+import java.util.HashMap;
 
 class Student {
-    int id;
     String name;
     String surname;
     int age;
     int course;
     double averageMark;
 
-    public Student(int id, String name, String surname, int age, int course, double averageMark) {
-        this.id = id;
+    public Student(String name, String surname, int age, int course, double averageMark) {
         this.name = name;
         this.surname = surname;
         this.age = age;
@@ -20,8 +18,7 @@ class Student {
     @Override
     public String toString() {
         return "Student{" +
-                "id: " + id +
-                ", name: " + name + '\'' +
+                "name: " + name + '\'' +
                 ", surname: " + surname + '\'' +
                 ", age: " + age +
                 ", course: " + course +
@@ -31,51 +28,26 @@ class Student {
 }
 
 class StudentDatabase {
-    private LinkedList<Student> students;
+    private HashMap<String, Student> students;
 
     public StudentDatabase() {
-        students = new LinkedList<>();
+        students = new HashMap<>();
     }
 
     public void addStudent(Student student) {
-        students.add(student);
+        students.put(student.surname, student);
     }
 
-    public void addStudentAtFirst(Student student) {
-        students.addFirst(student);
+    public void removeStudentBySurname(String surname) {
+        students.remove(surname);
     }
 
-    public void removeStudentById(int id) {
-        students.removeIf(student -> student.id == id);
-    }
-
-    public void removeFirstStudent() {
-        if (!students.isEmpty()) {
-            students.removeFirst();
-        } else {
-            System.out.println("Список порожній.");
-        }
-    }
-
-    public void removeLastStudent() {
-        if (!students.isEmpty()) {
-            students.removeLast();
-        } else {
-            System.out.println("Список порожній.");
-        }
-    }
-
-    public Student findStudentById(int id) {
-        for (Student student : students) {
-            if (student.id == id) {
-                return student;
-            }
-        }
-        return null;
+    public Student findStudentBySurname(String surname) {
+        return students.get(surname);
     }
 
     public void printAllStudents() {
-        for (Student student : students) {
+        for (Student student : students.values()) {
             System.out.println(student);
         }
     }
@@ -85,27 +57,25 @@ public class Main {
     public static void main(String[] args) {
         StudentDatabase db = new StudentDatabase();
 
-        db.addStudent(new Student(1, "John", "Doe", 20, 3, 85.5));
-        db.addStudent(new Student(2, "Jane", "Smith", 21, 4, 90.0));
-        db.addStudentAtFirst(new Student(3, "Tom", "Brown", 19, 2, 78.3)); // додаємо на початок списку
+        db.addStudent(new Student("John", "Doe", 20, 3, 85.5));
+        db.addStudent(new Student("Jane", "Smith", 21, 4, 90.0));
+        db.addStudent(new Student("Tom", "Brown", 19, 2, 78.3));
 
         System.out.println("Список всіх студентів:");
         db.printAllStudents();
 
-        System.out.println("\nВидалення першого студента:");
-        db.removeFirstStudent();
-        db.printAllStudents();
-
-        System.out.println("\nВидалення останнього студента:");
-        db.removeLastStudent();
-        db.printAllStudents();
-
-        System.out.println("\nПошук студента з id 1:");
-        Student foundStudent = db.findStudentById(1);
+        System.out.println("\nПошук студента з прізвищем Doe:");
+        Student foundStudent = db.findStudentBySurname("Doe");
         if (foundStudent != null) {
             System.out.println(foundStudent);
         } else {
             System.out.println("Студента не знайдено.");
         }
+
+        System.out.println("\nВидалення студента з прізвищем Smith:");
+        db.removeStudentBySurname("Smith");
+
+        System.out.println("Список всіх студентів після видалення:");
+        db.printAllStudents();
     }
 }
